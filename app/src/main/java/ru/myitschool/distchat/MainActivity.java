@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText editText1;
@@ -22,5 +25,11 @@ public class MainActivity extends AppCompatActivity {
         editText2 = findViewById(R.id.edit2);
         textView = findViewById(R.id.text1);
         button = findViewById(R.id.button);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://distchat.sch120.ru")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MyApi myApi = retrofit.create(MyApi.class);
     }
 }
