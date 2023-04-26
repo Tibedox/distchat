@@ -8,11 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.annotations.SerializedName;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,4 +61,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+}
+
+interface MyApi {
+    @GET("/chat.php")
+    Call<MyData> getData(@Query("x") int x, @Query("y") int y);
+}
+
+class MyData {
+    @SerializedName("x")
+    int x;
+    @SerializedName("y")
+    int y;
+    @SerializedName("z")
+    int z;
 }
