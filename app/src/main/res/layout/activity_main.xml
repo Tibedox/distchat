@@ -8,59 +8,53 @@
 
 
     <EditText
-        android:id="@+id/edit1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:id="@+id/editmsg"
+        android:layout_width="320dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="x"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:hint="message"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="y"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit1" />
-
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="x+y="
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit2" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintVertical_bias="0.004" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:textSize="30sp"
+        android:id="@+id/btnsend"
+        android:layout_width="66dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Ok"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/editmsg"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintVertical_bias="0.004" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="393dp"
+        android:layout_height="249dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text1"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/allmsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

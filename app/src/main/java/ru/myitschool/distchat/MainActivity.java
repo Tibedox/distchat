@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,20 +22,19 @@ import retrofit2.http.Query;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText editText1;
-    EditText editText2;
-    TextView textView;
-    Button button;
-    MyData myData;
+    EditText editMSG;
+    TextView allMSG;
+    Button btnSendMSG;
+    String name = "Oleg";
+    ArrayList<MyMSG> msgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText1 = findViewById(R.id.edit1);
-        editText2 = findViewById(R.id.edit2);
-        textView = findViewById(R.id.text1);
-        button = findViewById(R.id.button);
+        editMSG = findViewById(R.id.editmsg);
+        allMSG = findViewById(R.id.allmsg);
+        btnSendMSG = findViewById(R.id.btnsend);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://distchat.sch120.ru")
@@ -41,21 +42,25 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         MyApi myApi = retrofit.create(MyApi.class);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        btnSendMSG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int x = Integer.parseInt(editText1.getText().toString());
-                int y = Integer.parseInt(editText2.getText().toString());
-                myApi.getData(x, y).enqueue(new Callback<MyData>() {
+                String s = editMSG.getText().toString();
+                myApi.send(name, s).enqueue(new Callback<ArrayList<MyMSG>>() {
                     @Override
-                    public void onResponse(Call<MyData> call, Response<MyData> response) {
-                        myData = response.body();
-                        textView.setText("x0+y="+myData.z);
+                    public void onResponse(Call<ArrayList<MyMSG>> call, Response<ArrayList<MyMSG>> response) {
+                        msgs = response.body();
+                        String s = "";
+                        for (int i = 0; i < msgs.size(); i++) {
+                            s += msgs.get(i).date+" "+msgs.get(i).name+"\n"+
+                                    msgs.get(i).msg+"\n";
+                        }
+                        allMSG.setText(s);
                     }
 
                     @Override
-                    public void onFailure(Call<MyData> call, Throwable t) {
-                        textView.setText("не вышло");
+                    public void onFailure(Call<ArrayList<MyMSG>> call, Throwable t) {
+                        allMSG.setText("не вышло");
                     }
                 });
             }
@@ -65,14 +70,17 @@ public class MainActivity extends AppCompatActivity {
 
 interface MyApi {
     @GET("/chat.php")
-    Call<MyData> getData(@Query("x") int x, @Query("y") int y);
+    Call<ArrayList<MyMSG>> send(@Query("name") String x, @Query("msg") String msg);
+
+    @GET("/chat.php")
+    Call<ArrayList<MyMSG>> read(@Query("read") String x);
 }
 
-class MyData {
-    @SerializedName("x")
-    int x;
-    @SerializedName("y")
-    int y;
-    @SerializedName("z")
-    int z;
+class MyMSG {
+    @SerializedName("name")
+    String name;
+    @SerializedName("date")
+    long date;
+    @SerializedName("msg")
+    String msg;
 }
