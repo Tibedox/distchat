@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         myApi = retrofit.create(MyApi.class);
 
+        // тикают часы
         handler = new Handler();
         handler.postDelayed(myTimer, 500);
 
