@@ -3,9 +3,11 @@ package ru.myitschool.distchat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.annotations.SerializedName;
@@ -25,8 +27,21 @@ public class MainActivity extends AppCompatActivity {
     EditText editMSG;
     TextView allMSG;
     Button btnSendMSG;
+    ScrollView scrollView;
     String name = "Oleg";
     ArrayList<MyMSG> msgs;
+    Retrofit retrofit;
+    MyApi myApi;
+    Handler handler;
+    int lastId;
+
+    Runnable myTimer = new Runnable() {
+        @Override
+        public void run() {
+            handler.postDelayed(this, 500); // интервал обновления
+            readData(); // читаем из базы
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +50,16 @@ public class MainActivity extends AppCompatActivity {
         editMSG = findViewById(R.id.editmsg);
         allMSG = findViewById(R.id.allmsg);
         btnSendMSG = findViewById(R.id.btnsend);
+        scrollView = findViewById(R.id.scrollView);
 
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl("https://distchat.sch120.ru")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MyApi myApi = retrofit.create(MyApi.class);
+        myApi = retrofit.create(MyApi.class);
+
+        handler = new Handler();
+        handler.postDelayed(myTimer, 500);
 
         btnSendMSG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
                                     msgs.get(i).msg+"\n\n";
                         }
                         allMSG.setText(s);
+                        if(msgs.get(msgs.size()-1).id>lastId) {
+                            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
                     }
 
                     @Override
@@ -64,6 +86,29 @@ public class MainActivity extends AppCompatActivity {
                         allMSG.setText("не вышло");
                     }
                 });
+            }
+        });
+    }
+
+    void readData() {
+        myApi.read("1").enqueue(new Callback<ArrayList<MyMSG>>() {
+            @Override
+            public void onResponse(Call<ArrayList<MyMSG>> call, Response<ArrayList<MyMSG>> response) {
+                msgs = response.body();
+                String s = "";
+                for (int i = 0; i < msgs.size(); i++) {
+                    s += msgs.get(i).name+" "+msgs.get(i).datetime+"\n"+
+                            msgs.get(i).msg+"\n\n";
+                }
+                allMSG.setText(s);
+                if(msgs.get(msgs.size()-1).id>lastId) {
+                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<MyMSG>> call, Throwable t) {
+                allMSG.setText("не вышло");
             }
         });
     }
