@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                         allMSG.setText(s);
                         if(msgs.get(msgs.size()-1).id>lastId) {
                             scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                            lastId = msgs.get(msgs.size()-1).id;
                         }
                     }
 
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 allMSG.setText(s);
                 if(msgs.get(msgs.size()-1).id>lastId) {
                     scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    lastId = msgs.get(msgs.size()-1).id;
                 }
             }
 
