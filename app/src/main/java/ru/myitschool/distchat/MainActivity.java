@@ -46,14 +46,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String s = editMSG.getText().toString();
+                editMSG.setText("");
                 myApi.send(name, s).enqueue(new Callback<ArrayList<MyMSG>>() {
                     @Override
                     public void onResponse(Call<ArrayList<MyMSG>> call, Response<ArrayList<MyMSG>> response) {
                         msgs = response.body();
                         String s = "";
                         for (int i = 0; i < msgs.size(); i++) {
-                            s += msgs.get(i).date+" "+msgs.get(i).name+"\n"+
-                                    msgs.get(i).msg+"\n";
+                            s += msgs.get(i).name+" "+msgs.get(i).datetime+"\n"+
+                                    msgs.get(i).msg+"\n\n";
                         }
                         allMSG.setText(s);
                     }
@@ -77,10 +78,12 @@ interface MyApi {
 }
 
 class MyMSG {
+    @SerializedName("id")
+    int id;
     @SerializedName("name")
     String name;
-    @SerializedName("date")
-    long date;
+    @SerializedName("datetime")
+    String datetime;
     @SerializedName("msg")
     String msg;
 }
